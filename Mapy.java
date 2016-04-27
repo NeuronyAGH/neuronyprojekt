@@ -20,18 +20,37 @@ class TestowaMapa {
 
     System.out.println("Oto nasza lista: " + listaArgumentow);
 
+    for(int i=0; i<listaArgumentow.size();i++){ //Będziemy tworzyć mapę wszystkich neuronów
+      int element = listaArgumentow.get(i);
 
-    for(Integer el : listaArgumentow){
-      if(t_mapa.get(el)==null){
+      if(t_mapa.get(element)==null){ //Sprawdzamy, czy trzeba dodać neuron do mapy
         List<Integer> listaPolaczen = new ArrayList<Integer>();
-        t_mapa.put(el, listaPolaczen);
+        t_mapa.put(element, listaPolaczen); //Dodajemy neuron z pustą listą połączeń
       }
       else {
-        System.out.println("W naszej mapie jest juz klucz " + el);
+        // System.out.println("W naszej mapie jest juz klucz " + element);
       }
+
+      if(i>0){
+        for(int j=i-1; j>=0;j--){ //Dla każdego neuronu będziemy dodawać połączenia do wszystkich poprzednich
+          List<Integer> lista_w_Mapie = t_mapa.get(element);
+          Integer idPolaczenia = listaArgumentow.get(j);
+
+          //Sprzwdzamy, czy połączenia już nie ma (w dalszej wersji programu będziemy wtedy mu zwiększać "wartość". Na razie po prostu nie duplikujemy)
+          if(!lista_w_Mapie.contains(idPolaczenia)){
+            lista_w_Mapie.add(idPolaczenia); //Dodajemy połączenie
+          }
+        }
+      }
+
     }
 
-    System.out.println("Oto nasza pusta mapa z miejscem na dodawanie polaczen: " + t_mapa);
+    //Wypisywanie mapy:
+
+    System.out.println("Oto nasza mapa:");
+    for(Map.Entry<Integer, List<Integer>> el : t_mapa.entrySet()){
+      System.out.println(el.getKey() + ":" + el.getValue());
+    }
 
   }
 }
