@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +16,14 @@ public class Mapy {
 class TestowaMapa {
   TestowaMapa(){
     List<Integer> listaArgumentow = Arrays.asList(5,3,8,9,1,0,4);
-    Map<Integer, String> t_mapa = new HashMap<Integer, String>();
+    Map<Integer, List<Integer>> t_mapa = new HashMap<Integer, List<Integer>>();
 
     System.out.println("Oto nasza lista: " + listaArgumentow);
 
 
     for(Integer el : listaArgumentow){
-      t_mapa.put(el,"TestowyStringnumer"+el);
+      List<Integer> listaPolaczen = new ArrayList<Integer>();
+      t_mapa.put(el, listaPolaczen);
     }
 
     System.out.println("Oto nasza mapa: " + t_mapa);
