@@ -15,18 +15,23 @@ public class Mapy {
 
 class TestowaMapa {
   TestowaMapa(){
-    List<Integer> listaArgumentow = Arrays.asList(5,3,8,9,1,0,4);
+    List<Integer> listaArgumentow = Arrays.asList(5,3,8,9,1,0,4,3,12,0);
     Map<Integer, List<Integer>> t_mapa = new HashMap<Integer, List<Integer>>();
 
     System.out.println("Oto nasza lista: " + listaArgumentow);
 
 
     for(Integer el : listaArgumentow){
-      List<Integer> listaPolaczen = new ArrayList<Integer>();
-      t_mapa.put(el, listaPolaczen);
+      if(t_mapa.get(el)==null){
+        List<Integer> listaPolaczen = new ArrayList<Integer>();
+        t_mapa.put(el, listaPolaczen);
+      }
+      else {
+        System.out.println("W naszej mapie jest juz klucz " + el);
+      }
     }
 
-    System.out.println("Oto nasza mapa: " + t_mapa);
+    System.out.println("Oto nasza pusta mapa z miejscem na dodawanie polaczen: " + t_mapa);
 
   }
 }
