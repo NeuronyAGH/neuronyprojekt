@@ -33,10 +33,18 @@ class TestowaMapa {
       { 0.4, 1, 5, 7, 8 },
     };
 
+    System.out.printf("\n");
     System.out.println("Oto nasza tablica wejściowa: ");
     for(int i = 0; i<tablicaArgumentow.length; i++ ){
+      if(i==0){
+        for(int j = 0; j< tablicaArgumentow[i].length; j++){
+          System.out.printf("\tC" + j);
+        }
+        System.out.printf("\n");
+      }
+      System.out.printf("R" + i + "\t");
       for(int j = 0; j< tablicaArgumentow[i].length; j++){
-        System.out.printf(tablicaArgumentow[i][j] + " ");
+        System.out.printf(tablicaArgumentow[i][j] + "\t");
       }
       System.out.printf("\n");
     }
@@ -76,47 +84,5 @@ class TestowaMapa {
       System.out.printf(el.getKey() + " : ");
       System.out.println(polaczenia);
     }
-
-
-
-  //
-  //   for(int i = 0; i<tablicaArgumentow.length; i++ ){
-  //     for(int j = 0; j< tablicaArgumentow[i].length; j++){
-  //
-  //       double neuron = tablicaArgumentow[i][j];
-  //
-  //       if(neurony.get(neuron)==null){ //Sprawdzamy, czy trzeba dodać neuron do mapy
-  //         List<Punkt> pustaLista = new ArrayList<Punkt>();
-  //         neurony.put(neuron, pustaLista); //Dodajemy neuron z pustą listą połączeń
-  //         Punkt wspolrzedne = new Punkt();
-  //         wspolrzedne.x = i;
-  //         wspolrzedne.y=j;
-  //
-  //         neurony.get(neuron).add(wspolrzedne);
-  //       }
-  //       else {
-  //
-  //         Punkt wspolrzedne = new Punkt();
-  //         wspolrzedne.x = i;
-  //         wspolrzedne.y=j;
-  //
-  //         neurony.get(neuron).add(wspolrzedne);
-  //       }
-  //     }
-  //   }
-  //
-  //   //Wypisywanie mapy:
-  //
-  //   System.out.println("Oto nasza mapa:");
-  //   for(Map.Entry<Double, List<Punkt>> el : neurony.entrySet()){
-  //     List<Punkt> polaczenia =  el.getValue();
-  //     System.out.printf(el.getKey() + " : ");
-  //     for(int i=0;i<polaczenia.size();i++){
-  //       polaczenia.get(i).print();
-  //       System.out.printf(" ");
-  //     }
-  //     System.out.printf("\n");
-  //   }
-  //
   }
 }
