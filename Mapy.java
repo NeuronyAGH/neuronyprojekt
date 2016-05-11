@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Mapy {
   public static void main(String args[]) {
@@ -85,4 +88,21 @@ class TestowaMapa {
       System.out.println(polaczenia);
     }
   }
+}
+
+
+class WczytajZPliku{
+	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku .txt
+	File plik = new File("data.txt");
+	Scanner odczyt = new Scanner(plik);
+	StringTokenizer token;
+	while(odczyt.hasNextLine())
+	{
+		token = new StringTokenizer(odczyt.nextLine(), " ");
+		while(token.hasMoreElements())
+		{
+			System.out.println("Token =" + token.nextToken());
+		}
+		
+	}
 }
