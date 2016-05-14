@@ -13,19 +13,23 @@ public class Mapy {
   }
 }
 
-class Punkt {
-  int x;
-  int y;
-  void print(){
-    System.out.printf("["+x + ":" + y+"]");
+class Polaczenie {
+  double wartosc;
+  String kolumna;
+  Polaczenie(double wartosc, String kolumna){
+    this.wartosc = wartosc;
+    this.kolumna = kolumna;
+  }
+  void printPolaczenie(){
+    System.out.printf("["+ kolumna + ":" + wartosc +"]");
   }
 }
 
 class TestowaMapa {
   TestowaMapa(){
     List<Integer> listaArgumentow = Arrays.asList(5,3,8,9,1,0,4,3,12,0);
-    Map<String, List<Double>> neurony = new HashMap<String, List<Double>>();
     Map<String, List<Double>> kolumny = new HashMap<String, List<Double>>();
+    Map<String, List<Polaczenie>> neurony = new HashMap<String, List<Polaczenie>>();
 
 
     double[][] tablicaArgumentow = new double[][]{
@@ -66,11 +70,12 @@ class TestowaMapa {
     }
 
     for(int i = 0; i<tablicaArgumentow.length; i++ ){
-      List<Double> wartosci = new ArrayList<Double>();
+      List<Polaczenie> wartosci = new ArrayList<Polaczenie>();
       neurony.put("O"+i, wartosci);
 
       for(int j=0;j<tablicaArgumentow[i].length;j++){
-        neurony.get("O"+i).add(tablicaArgumentow[i][j]);
+        Polaczenie nowePolaczenie = new Polaczenie(tablicaArgumentow[i][j], "C"+j);
+        neurony.get("O"+i).add(nowePolaczenie);
       }
     }
 
@@ -82,27 +87,26 @@ class TestowaMapa {
     }
 
     System.out.println("Neurony:");
-    for(Map.Entry<String, List<Double>> el : neurony.entrySet()){
-      List<Double> polaczenia =  el.getValue();
+    for(Map.Entry<String, List<Polaczenie>> el : neurony.entrySet()){
+      List<Polaczenie> polaczenia =  el.getValue();
       System.out.printf(el.getKey() + " : ");
-      System.out.println(polaczenia);
+      for(Polaczenie polaczenie : polaczenia){
+        polaczenie.printPolaczenie();
+      }
+      System.out.printf("\n");
     }
   }
 }
 
-
-class WczytajZPliku{
-	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku
-	File plik = new File("data.txt");
-	Scanner odczyt = new Scanner(plik);
-	StringTokenizer token;
-	while(odczyt.hasNextLine())
-	{
-		token = new StringTokenizer(odczyt.nextLine(), " ");
-		while(token.hasMoreElements())
-		{
-			System.out.println("Token =" + token.nextToken());
-		}
-		
-	}
-}
+// class WczytajZPliku{
+// 	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku
+// 	File plik = new File("data.txt");
+// 	Scanner odczyt = new Scanner(plik);
+// 	StringTokenizer token;
+// 	while(odczyt.hasNextLine()){
+// 		token = new StringTokenizer(odczyt.nextLine(), " ");
+// 		while(token.hasMoreElements()){
+// 			System.out.println("Token =" + token.nextToken());
+// 		}
+// 	}
+// }
