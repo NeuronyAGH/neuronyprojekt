@@ -92,7 +92,7 @@ class TestowaMapa {
 
 
 class WczytajZPliku{
-	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku .txt
+	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku
 	File plik = new File("data.txt");
 	Scanner odczyt = new Scanner(plik);
 	StringTokenizer token;
