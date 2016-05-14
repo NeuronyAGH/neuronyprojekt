@@ -6,10 +6,12 @@ import java.util.Map;
 import java.io.File;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.io.FileNotFoundException;
 
 public class Mapy {
   public static void main(String args[]) {
     TestowaMapa nowaMapa = new TestowaMapa();
+    WczytajZPliku test = new WczytajZPliku();
   }
 }
 
@@ -98,15 +100,23 @@ class TestowaMapa {
   }
 }
 
-// class WczytajZPliku{
-// 	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku
-// 	File plik = new File("data.txt");
-// 	Scanner odczyt = new Scanner(plik);
-// 	StringTokenizer token;
-// 	while(odczyt.hasNextLine()){
-// 		token = new StringTokenizer(odczyt.nextLine(), " ");
-// 		while(token.hasMoreElements()){
-// 			System.out.println("Token =" + token.nextToken());
-// 		}
-// 	}
-// }
+class WczytajZPliku{
+  WczytajZPliku(){
+  	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku
+    System.out.println("---TEST ODCZYTU PLIKU--");
+  	File plik = new File("data.txt");
+    try{
+  	  Scanner odczyt = new Scanner(plik);
+    	StringTokenizer token;
+    	while(odczyt.hasNextLine()){
+    		token = new StringTokenizer(odczyt.nextLine(), " ");
+    		while(token.hasMoreElements()){
+    			System.out.printf(token.nextToken()+"\t");
+    		}
+        System.out.printf("\n");
+    	}
+    } catch(FileNotFoundException fnfe) {
+      System.out.println(fnfe.getMessage());
+    }
+  }
+}
