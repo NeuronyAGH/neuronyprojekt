@@ -24,7 +24,7 @@ class Polaczenie {
     this.kolumna = kolumna;
   }
   void printPolaczenie(){
-    System.out.printf("["+ wartosc + ":" + kolumna +"]");
+    System.out.printf("["+ wartosc + " : " + kolumna +"]");
   }
 }
 
@@ -93,18 +93,24 @@ class SiecNeuronowa {
     // WYPISYWANIE MAP
 
     System.out.println("Kolumny:");
-    for(Map.Entry<String, List<Double>> el : kolumny.entrySet()){
-      List<Double> polaczenia =  el.getValue();
-      System.out.printf(el.getKey() + " : ");
-      System.out.println(polaczenia);
+    List<String> k_kolumny = new ArrayList<String>(kolumny.keySet());
+    Collections.sort(k_kolumny);
+    for(String key : k_kolumny){
+      // List<Double> polaczenia =  el.getValue();
+      System.out.printf(key + " : ");
+      System.out.println(kolumny.get(key));
     }
 
     System.out.println("Neurony:");
-    for(Map.Entry<String, List<Polaczenie>> el : neurony.entrySet()){
-      List<Polaczenie> polaczenia =  el.getValue();
-      System.out.printf(el.getKey() + " : ");
+    List<String> k_neurony = new ArrayList<String>(neurony.keySet());
+    Collections.sort(k_neurony);
+    for(String key : k_neurony){
+      System.out.printf(key + " : ");
+
+      List<Polaczenie> polaczenia =  neurony.get(key);
       for(Polaczenie polaczenie : polaczenia){
         polaczenie.printPolaczenie();
+        System.out.printf(" ");
       }
       System.out.printf("\n");
     }
