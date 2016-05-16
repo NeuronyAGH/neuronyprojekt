@@ -11,8 +11,17 @@ import java.util.Collections;
 
 public class Neurony {
   public static void main(String args[]) {
-    SiecNeuronowa nowaMapa = new SiecNeuronowa();
+
+    double[] zapalarka = new double[]() {1, 1.5, 3, 2, 9, 2.1};
+
     WczytajZPliku test = new WczytajZPliku();
+    SiecNeuronowa nowaMapa = new SiecNeuronowa(test.tablica);
+    for(double[] a: test.tablica){
+      for(double b: a){
+        System.out.printf("%.1f ",b);
+      }
+      System.out.printf("\n");
+    }
   }
 }
 
@@ -29,18 +38,12 @@ class Polaczenie {
 }
 
 class SiecNeuronowa {
-  SiecNeuronowa(){
+  SiecNeuronowa(double[][] t){
 
     Map<String, List<Double>> kolumny = new HashMap<String, List<Double>>();
     Map<String, List<Polaczenie>> neurony = new HashMap<String, List<Polaczenie>>();
 
-    double[][] tablicaWejsciowa = new double[][]{
-      { 0.1, 3, 4.5, 6, 8 },
-      { 1, 1.5, 2, 2.2, 2.7 },
-      { 0.3, 1, 6, 10, 10.2 },
-      { 1, 0.5, 1.2, 2, 10 },
-      { 0.4, 1, 5, 7, 8 },
-    };
+    double[][] tablicaWejsciowa = t;
 
     // WYPISYWANIE TABLICY WEJŚCIOWEJ
 
@@ -96,7 +99,6 @@ class SiecNeuronowa {
     List<String> k_kolumny = new ArrayList<String>(kolumny.keySet());
     Collections.sort(k_kolumny);
     for(String key : k_kolumny){
-      // List<Double> polaczenia =  el.getValue();
       System.out.printf(key + " : ");
       System.out.println(kolumny.get(key));
     }
@@ -118,6 +120,7 @@ class SiecNeuronowa {
 }
 
 class WczytajZPliku{
+  double[][] tablica = new double[5][6];
   WczytajZPliku(){
   	//poki co tylko wczytuje i wypisuje na ekran pojedyncze wartosci z pliku
     System.out.println("---TEST ODCZYTU PLIKU--");
@@ -125,12 +128,15 @@ class WczytajZPliku{
     try{
   	  Scanner odczyt = new Scanner(plik);
     	StringTokenizer token;
+      int i=0;
     	while(odczyt.hasNextLine()){
     		token = new StringTokenizer(odczyt.nextLine(), " ");
+        int j=0;
     		while(token.hasMoreElements()){
-    			System.out.printf(token.nextToken()+"\t");
+    			tablica[i][j] = Double.parseDouble(token.nextToken());
+          j++;
     		}
-        System.out.printf("\n");
+        i++;
     	}
     } catch(FileNotFoundException fnfe) {
       System.out.println(fnfe.getMessage());
