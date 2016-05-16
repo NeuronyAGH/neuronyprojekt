@@ -7,10 +7,11 @@ import java.io.File;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 
-public class Mapy {
+public class Neurony {
   public static void main(String args[]) {
-    TestowaMapa nowaMapa = new TestowaMapa();
+    SiecNeuronowa nowaMapa = new SiecNeuronowa();
     WczytajZPliku test = new WczytajZPliku();
   }
 }
@@ -23,18 +24,17 @@ class Polaczenie {
     this.kolumna = kolumna;
   }
   void printPolaczenie(){
-    System.out.printf("["+ kolumna + ":" + wartosc +"]");
+    System.out.printf("["+ wartosc + ":" + kolumna +"]");
   }
 }
 
-class TestowaMapa {
-  TestowaMapa(){
-    List<Integer> listaArgumentow = Arrays.asList(5,3,8,9,1,0,4,3,12,0);
+class SiecNeuronowa {
+  SiecNeuronowa(){
+
     Map<String, List<Double>> kolumny = new HashMap<String, List<Double>>();
     Map<String, List<Polaczenie>> neurony = new HashMap<String, List<Polaczenie>>();
 
-
-    double[][] tablicaArgumentow = new double[][]{
+    double[][] tablicaWejsciowa = new double[][]{
       { 0.1, 3, 4.5, 6, 8 },
       { 1, 1.5, 2, 2.2, 2.7 },
       { 0.3, 1, 6, 10, 10.2 },
@@ -42,44 +42,55 @@ class TestowaMapa {
       { 0.4, 1, 5, 7, 8 },
     };
 
+    // WYPISYWANIE TABLICY WEJŚCIOWEJ
+
     System.out.printf("\n");
     System.out.println("Oto nasza tablica wejściowa: ");
-    for(int i = 0; i<tablicaArgumentow.length; i++ ){
+    for(int i = 0; i<tablicaWejsciowa.length; i++ ){
       if(i==0){
-        for(int j = 0; j< tablicaArgumentow[i].length; j++){
+        for(int j = 0; j< tablicaWejsciowa[i].length; j++){
           System.out.printf("\tC" + j);
         }
         System.out.printf("\n");
       }
       System.out.printf("R" + i + "\t");
-      for(int j = 0; j< tablicaArgumentow[i].length; j++){
-        System.out.printf(tablicaArgumentow[i][j] + "\t");
+      for(int j = 0; j< tablicaWejsciowa[i].length; j++){
+        System.out.printf(tablicaWejsciowa[i][j] + "\t");
       }
       System.out.printf("\n");
     }
     System.out.printf("\n\n");
 
-    for(int i = 0; i<tablicaArgumentow[0].length; i++ ){
+    // TWORZENIE NEURONÓW DLA WARTOŚCI W WEDŁUG KOLUMN
+
+    for(int i = 0; i<tablicaWejsciowa[0].length; i++ ){
       List<Double> wartosci = new ArrayList<Double>();
       if(kolumny.get(i)==null){
         kolumny.put("C"+i, wartosci);
       }
-      for(int j=0;j<tablicaArgumentow.length;j++){
-        if(!kolumny.get("C"+i).contains(tablicaArgumentow[j][i])){
-          kolumny.get("C"+i).add(tablicaArgumentow[j][i]);
+      for(int j=0;j<tablicaWejsciowa.length;j++){
+        if(!kolumny.get("C"+i).contains(tablicaWejsciowa[j][i])){
+          kolumny.get("C"+i).add(tablicaWejsciowa[j][i]);
         }
       }
+      Collections.sort(kolumny.get("C"+i));
     }
 
-    for(int i = 0; i<tablicaArgumentow.length; i++ ){
+    // TWORZENIE NEURONÓW DLA KAŻDEGO WIERSZA (Z PUSTĄ LISTĄ POŁĄCZEŃ)
+
+    for(int i = 0; i<tablicaWejsciowa.length; i++ ){
       List<Polaczenie> wartosci = new ArrayList<Polaczenie>();
       neurony.put("O"+i, wartosci);
 
-      for(int j=0;j<tablicaArgumentow[i].length;j++){
-        Polaczenie nowePolaczenie = new Polaczenie(tablicaArgumentow[i][j], "C"+j);
+      // ŁACZENIE NEURONÓW Z WARTOŚCIAMI (WYPEŁNIANIE LISTY POŁĄCZEŃ)
+
+      for(int j=0;j<tablicaWejsciowa[i].length;j++){
+        Polaczenie nowePolaczenie = new Polaczenie(tablicaWejsciowa[i][j], "C"+j);
         neurony.get("O"+i).add(nowePolaczenie);
       }
     }
+
+    // WYPISYWANIE MAP
 
     System.out.println("Kolumny:");
     for(Map.Entry<String, List<Double>> el : kolumny.entrySet()){
