@@ -201,7 +201,9 @@ class SiecNeuronowa {
     System.out.println("\nWYPISYWANIE:\n");
     for(double key : sortowaneOdleglosci){
       for(PolaczenieWartosc el : odleglosci.get(key)){
-        wypiszNeuron(el);
+        if(!containsPolaczenie(wypisaneValueNeurons, el)){
+          wypiszNeuron(el);
+        }
       }
     }
   }
