@@ -139,31 +139,37 @@ class SiecNeuronowa {
   }
 
   void wypiszNeuron(PolaczenieWartosc valueNeuron){
-    wypisaneValueNeurons.add(valueNeuron);
-    valueNeuron.printPolaczenieWartosc();
-    System.out.print("\n");
-    List<String> polaczenia = kolumny.get(valueNeuron.kolumna).get(valueNeuron.wartosc);
-    if(polaczenia.size()>0){
-      for(String polaczenie : polaczenia){
-        if(!wypisaneObjectNeurons.contains(polaczenie)){
-          wypiszNeuron(polaczenie);
+    try {
+      wypisaneValueNeurons.add(valueNeuron);
+      valueNeuron.printPolaczenieWartosc();
+      System.out.print("\n");
+      List<String> polaczenia = kolumny.get(valueNeuron.kolumna).get(valueNeuron.wartosc);
+      if(polaczenia.size()>0){
+        for(String polaczenie : polaczenia){
+          if(!wypisaneObjectNeurons.contains(polaczenie)){
+            wypiszNeuron(polaczenie);
+          }
         }
       }
+    } catch (Exception e) {
+      System.out.println("Thread  interrupted.");
     }
   }
   void wypiszNeuron(String objectNeuron){
-    wypisaneObjectNeurons.add(objectNeuron);
-    System.out.println(objectNeuron);
-    List<PolaczenieWartosc> polaczenia = neurony.get(objectNeuron);
-    if(polaczenia.size()>0){
-      for(PolaczenieWartosc polaczenie : polaczenia){
-
-        // System.out.println(containsPolaczenie(siec.wypisaneValueNeurons, polaczenie));
-
-        if(!containsPolaczenie(wypisaneValueNeurons, polaczenie)){
-          wypiszNeuron(polaczenie);
+    try{
+      wypisaneObjectNeurons.add(objectNeuron);
+      System.out.println(objectNeuron);
+      List<PolaczenieWartosc> polaczenia = neurony.get(objectNeuron);
+      if(polaczenia.size()>0){
+        for(PolaczenieWartosc polaczenie : polaczenia){
+          if(!containsPolaczenie(wypisaneValueNeurons, polaczenie)){
+            System.out.print("\t");
+            wypiszNeuron(polaczenie);
+          }
         }
       }
+    } catch (Exception e) {
+      System.out.println("Thread  interrupted.");
     }
   }
 
@@ -199,15 +205,53 @@ class SiecNeuronowa {
     }
 
     System.out.println("\nWYPISYWANIE:\n");
+    List<ThreadWypisz> threads = new ArrayList<ThreadWypisz>();
     for(double key : sortowaneOdleglosci){
       for(PolaczenieWartosc el : odleglosci.get(key)){
         if(!containsPolaczenie(wypisaneValueNeurons, el)){
-          wypiszNeuron(el);
+          threads.add(new ThreadWypisz("Thread", this, el));
+          // wypiszNeuron(el);
         }
       }
     }
+    for(ThreadWypisz t : threads){
+      t.start();
+    }
+    try {
+      for(ThreadWypisz t : threads){
+        t.join();
+      }
+    }
+    catch( Exception e) {
+         System.out.println("Interrupted");
+      }
   }
 
+}
+
+class ThreadWypisz extends Thread {
+  private Thread t;
+  private String threadName;
+  PolaczenieWartosc  polaczenie;
+  SiecNeuronowa siec;
+  ThreadWypisz( String name, SiecNeuronowa Sie,  PolaczenieWartosc Pol){
+    threadName = name;
+    siec = Sie;
+    polaczenie = Pol;
+  }
+  public void run() {
+    // synchronized(siec) {
+      siec.wypiszNeuron(polaczenie);
+    // }
+    // System.out.println("Thread " +  threadName + " exiting.");
+  }
+  public void start (){
+    // System.out.println("Starting " +  threadName );
+    if (t == null){
+      t = new Thread (this, threadName);
+      t.start ();
+    }
+  }
 }
 
 class WczytajZPliku{
