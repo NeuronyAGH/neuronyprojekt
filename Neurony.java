@@ -15,7 +15,8 @@ public class Neurony {
     double[] zapalarka = {1, 1.5, 3, 2, 9, 2.1};
 
     WczytajZPliku test = new WczytajZPliku();
-    SiecNeuronowa nowaMapa = new SiecNeuronowa(test.tablica);
+    SiecNeuronowa nowaSiec = new SiecNeuronowa(test.tablica);
+    nowaSiec.rozpal(zapalarka);
   }
 }
 
@@ -27,15 +28,18 @@ class PolaczenieWartosc {
     this.kolumna = kolumna;
   }
   void printPolaczenieWartosc(){
-    System.out.printf("["+ wartosc + " : " + kolumna +"]");
+    System.out.print("["+ wartosc + " : " + kolumna +"]");
   }
 }
 
 class SiecNeuronowa {
-  SiecNeuronowa(double[][] t){
+  List<PolaczenieWartosc> wypisaneValueNeurons = new ArrayList<PolaczenieWartosc>();
+  List<String> wypisaneObjectNeurons = new ArrayList<String>();
+  Map<String, Map<Double, List<String>>> kolumny = new HashMap<String, Map<Double, List<String>>>();
+  Map<String, List<PolaczenieWartosc>> neurony = new HashMap<String, List<PolaczenieWartosc>>();
+  Map<Double, List<PolaczenieWartosc>> odleglosci = new HashMap<Double, List<PolaczenieWartosc>>();
 
-    Map<String, Map<Double, List<String>>> kolumny = new HashMap<String, Map<Double, List<String>>>();
-    Map<String, List<PolaczenieWartosc>> neurony = new HashMap<String, List<PolaczenieWartosc>>();
+  SiecNeuronowa(double[][] t){
 
     double[][] tablicaWejsciowa = t;
 
@@ -124,6 +128,84 @@ class SiecNeuronowa {
       System.out.printf("\n");
     }
   }
+
+  boolean containsPolaczenie(List<PolaczenieWartosc> list, PolaczenieWartosc el){
+    for (PolaczenieWartosc e : list) {
+      if (e.wartosc == el.wartosc && e.kolumna.equals(el.kolumna)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void wypiszNeuron(PolaczenieWartosc valueNeuron){
+    wypisaneValueNeurons.add(valueNeuron);
+    valueNeuron.printPolaczenieWartosc();
+    System.out.print("\n");
+    List<String> polaczenia = kolumny.get(valueNeuron.kolumna).get(valueNeuron.wartosc);
+    if(polaczenia.size()>0){
+      for(String polaczenie : polaczenia){
+        if(!wypisaneObjectNeurons.contains(polaczenie)){
+          wypiszNeuron(polaczenie);
+        }
+      }
+    }
+  }
+  void wypiszNeuron(String objectNeuron){
+    wypisaneObjectNeurons.add(objectNeuron);
+    System.out.println(objectNeuron);
+    List<PolaczenieWartosc> polaczenia = neurony.get(objectNeuron);
+    if(polaczenia.size()>0){
+      for(PolaczenieWartosc polaczenie : polaczenia){
+
+        // System.out.println(containsPolaczenie(siec.wypisaneValueNeurons, polaczenie));
+
+        if(!containsPolaczenie(wypisaneValueNeurons, polaczenie)){
+          wypiszNeuron(polaczenie);
+        }
+      }
+    }
+  }
+
+  void rozpal(double[] zapalarka){
+
+    System.out.println("Rozpalamy używając: " + Arrays.toString(zapalarka));
+
+    for(int i=0; i<zapalarka.length;i++){
+      String key = "C"+i;
+      Map<Double, List<String>> kolumna = kolumny.get(key);
+      List<Double> values = new ArrayList<Double>(kolumna.keySet());
+      for(double value : values){
+        double odleglosc = Math.round(Math.abs(value-zapalarka[i])*100);
+        odleglosc /= 100;
+        if(odleglosci.get(odleglosc)==null){
+          odleglosci.put(odleglosc, new ArrayList<PolaczenieWartosc>());
+        }
+        PolaczenieWartosc nowePolaczenieWartosc = new PolaczenieWartosc(value, "C"+i);
+        odleglosci.get(odleglosc).add(nowePolaczenieWartosc);
+      }
+    }
+
+    System.out.println("\nTABLICA ODLEGŁOŚCI:\n");
+
+    List<Double> sortowaneOdleglosci = new ArrayList<Double>(odleglosci.keySet());
+    Collections.sort(sortowaneOdleglosci);
+    for(double key : sortowaneOdleglosci){
+      System.out.print(key + ": ");
+      for(PolaczenieWartosc el : odleglosci.get(key)){
+        el.printPolaczenieWartosc();
+      }
+      System.out.print("\n");
+    }
+
+    System.out.println("\nWYPISYWANIE:\n");
+    for(double key : sortowaneOdleglosci){
+      for(PolaczenieWartosc el : odleglosci.get(key)){
+        wypiszNeuron(el);
+      }
+    }
+  }
+
 }
 
 class WczytajZPliku{
