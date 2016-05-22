@@ -12,27 +12,21 @@ import java.util.Collections;
 public class Neurony {
   public static void main(String args[]) {
 
-    // double[] zapalarka = new double[6]() {1, 1.5, 3, 2, 9, 2.1};
+    double[] zapalarka = {1, 1.5, 3, 2, 9, 2.1};
 
     WczytajZPliku test = new WczytajZPliku();
     SiecNeuronowa nowaMapa = new SiecNeuronowa(test.tablica);
-    for(double[] a: test.tablica){
-      for(double b: a){
-        System.out.printf("%.1f ",b);
-      }
-      System.out.printf("\n");
-    }
   }
 }
 
-class Polaczenie {
+class PolaczenieWartosc {
   double wartosc;
   String kolumna;
-  Polaczenie(double wartosc, String kolumna){
+  PolaczenieWartosc(double wartosc, String kolumna){
     this.wartosc = wartosc;
     this.kolumna = kolumna;
   }
-  void printPolaczenie(){
+  void printPolaczenieWartosc(){
     System.out.printf("["+ wartosc + " : " + kolumna +"]");
   }
 }
@@ -40,8 +34,8 @@ class Polaczenie {
 class SiecNeuronowa {
   SiecNeuronowa(double[][] t){
 
-    Map<String, List<Double>> kolumny = new HashMap<String, List<Double>>();
-    Map<String, List<Polaczenie>> neurony = new HashMap<String, List<Polaczenie>>();
+    Map<String, Map<Double, List<String>>> kolumny = new HashMap<String, Map<Double, List<String>>>();
+    Map<String, List<PolaczenieWartosc>> neurony = new HashMap<String, List<PolaczenieWartosc>>();
 
     double[][] tablicaWejsciowa = t;
 
@@ -67,51 +61,64 @@ class SiecNeuronowa {
     // TWORZENIE NEURONÓW DLA WARTOŚCI W WEDŁUG KOLUMN
 
     for(int i = 0; i<tablicaWejsciowa[0].length; i++ ){
-      List<Double> wartosci = new ArrayList<Double>();
-      if(kolumny.get(i)==null){
-        kolumny.put("C"+i, wartosci);
+      Map<Double, List<String>> neuronywKolumnie = new HashMap<Double, List<String>>();
+
+      if(kolumny.get("C"+i)==null){
+        kolumny.put("C"+i, neuronywKolumnie);
       }
       for(int j=0;j<tablicaWejsciowa.length;j++){
-        if(!kolumny.get("C"+i).contains(tablicaWejsciowa[j][i])){
-          kolumny.get("C"+i).add(tablicaWejsciowa[j][i]);
+
+
+        double wartosc = tablicaWejsciowa[j][i];
+        if(kolumny.get("C"+i).get(wartosc)==null){
+          kolumny.get("C"+i).put(wartosc,new ArrayList<String>());
         }
       }
-      Collections.sort(kolumny.get("C"+i));
     }
 
     // TWORZENIE NEURONÓW DLA KAŻDEGO WIERSZA (Z PUSTĄ LISTĄ POŁĄCZEŃ)
 
     for(int i = 0; i<tablicaWejsciowa.length; i++ ){
-      List<Polaczenie> wartosci = new ArrayList<Polaczenie>();
+      List<PolaczenieWartosc> wartosci = new ArrayList<PolaczenieWartosc>();
       neurony.put("O"+i, wartosci);
 
       // ŁACZENIE NEURONÓW Z WARTOŚCIAMI (WYPEŁNIANIE LISTY POŁĄCZEŃ)
 
       for(int j=0;j<tablicaWejsciowa[i].length;j++){
-        Polaczenie nowePolaczenie = new Polaczenie(tablicaWejsciowa[i][j], "C"+j);
-        neurony.get("O"+i).add(nowePolaczenie);
+        double wartosc = tablicaWejsciowa[i][j];
+        PolaczenieWartosc nowePolaczenieWartosc = new PolaczenieWartosc(wartosc, "C"+j);
+        neurony.get("O"+i).add(nowePolaczenieWartosc);
+        kolumny.get("C"+j).get(wartosc).add("O"+i);
       }
     }
 
     // WYPISYWANIE MAP
 
-    System.out.println("Kolumny:");
     List<String> k_kolumny = new ArrayList<String>(kolumny.keySet());
     Collections.sort(k_kolumny);
     for(String key : k_kolumny){
-      System.out.printf(key + " : ");
-      System.out.println(kolumny.get(key));
+      System.out.printf(key + ": \n");
+      Map<Double, List<String>> neuronywKolumnie = kolumny.get(key);
+
+      List<Double> k_neuronywKolumnie = new ArrayList<Double>(neuronywKolumnie.keySet());
+      Collections.sort(k_neuronywKolumnie);
+
+      for(Double k_key : k_neuronywKolumnie){
+        System.out.printf("\t");
+        System.out.printf("%.1f -> ", k_key);
+        System.out.println(neuronywKolumnie.get(k_key));
+      }
     }
 
     System.out.println("Neurony:");
     List<String> k_neurony = new ArrayList<String>(neurony.keySet());
     Collections.sort(k_neurony);
     for(String key : k_neurony){
-      System.out.printf(key + " : ");
+      System.out.printf("\t" + key + " -> ");
 
-      List<Polaczenie> polaczenia =  neurony.get(key);
-      for(Polaczenie polaczenie : polaczenia){
-        polaczenie.printPolaczenie();
+      List<PolaczenieWartosc> polaczenia =  neurony.get(key);
+      for(PolaczenieWartosc PolaczenieWartosc : polaczenia){
+        PolaczenieWartosc.printPolaczenieWartosc();
         System.out.printf(" ");
       }
       System.out.printf("\n");
